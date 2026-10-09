@@ -1,0 +1,18 @@
+# Normaliza los fines de linea al guardar en el repositorio.
+#
+# El equipo trabaja entre Windows (CRLF) y macOS/Linux (LF). Sin esto, git
+# marca archivos enteros como modificados cuando en realidad no cambio una
+# sola letra, y cada pull se vuelve un conflicto.
+#
+# Despues de agregar este archivo hay que correr UNA vez:
+#   git add --renormalize .
+* text=auto
+
+# Binarios: que git no les toque nada.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.avif binary
+*.ico binary

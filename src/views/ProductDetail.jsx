@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { URL, handleResponse } from '../api/config'
+import { URL, errorText, handleResponse } from '../api/config'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import Price from '../components/Price'
@@ -65,7 +65,7 @@ function ProductDetail() {
           text:
             error.status === 400
               ? 'No hay stock suficiente. Revisá cuántos tenés ya en el carrito.'
-              : 'No se pudo agregar al carrito. Probá de nuevo.',
+              : errorText(error, 'No se pudo agregar al carrito. Probá de nuevo.'),
         }),
       )
       .finally(() => setAdding(false))
@@ -78,8 +78,8 @@ function ProductDetail() {
       <section className="empty-state">
         <h1>No encontramos este producto</h1>
         <p>Puede que lo hayan dado de baja.</p>
-        <Link to="/" className="btn">
-          Volver a la tienda
+        <Link to="/catalogo" className="btn">
+          Volver al catálogo
         </Link>
       </section>
     )
@@ -90,8 +90,8 @@ function ProductDetail() {
 
   return (
     <>
-      <Link to="/" className="back-link">
-        ← Volver a la tienda
+      <Link to="/catalogo" className="back-link">
+        ← Volver al catálogo
       </Link>
 
       <div className="detail">
@@ -110,7 +110,7 @@ function ProductDetail() {
                   aria-pressed={index === photoIndex}
                   onClick={() => setPhotoIndex(index)}
                 >
-                  <img src={url} alt="" />
+                  <ProductPhoto product={product} src={url} />
                 </button>
               ))}
             </div>

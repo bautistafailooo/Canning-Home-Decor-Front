@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { formatPrice } from '../api/config'
+import { errorText, formatPrice } from '../api/config'
 import { useCart } from '../context/CartContext'
 import CartLine from '../components/CartLine'
 
@@ -17,7 +17,7 @@ function Cart() {
   const explain = (err) =>
     err.status === 400
       ? 'No hay stock suficiente para esa cantidad.'
-      : 'No se pudo actualizar el carrito. Probá de nuevo.'
+      : errorText(err, 'No se pudo actualizar el carrito. Probá de nuevo.')
 
   // Marca la fila ocupada mientras viaja el pedido.
   const runOnItem = (itemId, action) => {
@@ -38,7 +38,7 @@ function Cart() {
     setWorking(true)
     setError('')
     clearCart()
-      .catch(() => setError('No se pudo vaciar el carrito. Probá de nuevo.'))
+      .catch((err) => setError(errorText(err, 'No se pudo vaciar el carrito. Probá de nuevo.')))
       .finally(() => setWorking(false))
   }
 
@@ -51,7 +51,7 @@ function Cart() {
         setError(
           err.status === 400
             ? 'Alguno de los productos ya no tiene stock suficiente. Revisá las cantidades.'
-            : 'No se pudo confirmar la compra. Probá de nuevo.',
+            : errorText(err, 'No se pudo confirmar la compra. Probá de nuevo.'),
         ),
       )
       .finally(() => setWorking(false))
@@ -81,7 +81,7 @@ function Cart() {
           <Link to="/mis-compras" className="btn">
             Ver mis compras
           </Link>
-          <Link to="/" className="btn btn-outline">
+          <Link to="/catalogo" className="btn btn-outline">
             Seguir comprando
           </Link>
         </div>
@@ -96,8 +96,8 @@ function Cart() {
       <section className="empty-state">
         <h1>Tu carrito está vacío</h1>
         <p>Cuando agregues productos desde la tienda, van a aparecer acá.</p>
-        <Link to="/" className="btn">
-          Ir a la tienda
+        <Link to="/catalogo" className="btn">
+          Ir al catálogo
         </Link>
       </section>
     )

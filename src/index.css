@@ -1062,3 +1062,136 @@ th.num {
 .thumb {
   min-width: 44px;
 }
+
+/* ---------- Subida de fotos del panel ---------- */
+
+.uploader {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.uploader-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.uploader-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.uploader-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.uploader-frame {
+  position: relative;
+  overflow: hidden;
+  background: var(--salvia);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-chico);
+}
+
+.uploader-frame img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.uploader-cover {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 3px 6px;
+  background: var(--eucalipto);
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+}
+
+.uploader-item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 13px;
+}
+
+/* ---------- Portada ---------- */
+
+.hero {
+  padding: clamp(32px, 7vw, 72px) 0;
+  border-bottom: 1px solid var(--borde);
+}
+
+.hero h1 {
+  max-width: 16ch;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.05;
+}
+
+.hero p {
+  max-width: 52ch;
+  margin: 16px 0 24px;
+  color: var(--piedra);
+  font-size: 1.05rem;
+}
+
+.home-section {
+  padding: clamp(28px, 5vw, 48px) 0;
+}
+
+.home-section h2 {
+  margin: 0 0 20px;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+}
+
+.home-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.home-section-header h2 {
+  margin: 0;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.category-grid a {
+  display: block;
+  padding: 18px 20px;
+  background: var(--papel);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  color: var(--tinta);
+  font-weight: 500;
+  text-decoration: none;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.category-grid a:hover {
+  border-color: var(--eucalipto);
+  color: var(--eucalipto);
+}

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { URL, formatPrice, handleResponse, headers } from '../../api/config'
+import { URL, errorText, formatPrice, handleResponse, headers } from '../../api/config'
 import { useAuth } from '../../context/AuthContext'
 import ProductForm from '../../components/ProductForm'
+import ProductPhoto from '../../components/ProductPhoto'
 import StockCell from '../../components/StockCell'
 
 function AdminProducts() {
@@ -73,7 +74,7 @@ function AdminProducts() {
         }
         setEditing(null)
       })
-      .catch(() => setError('No se pudo guardar el producto. Revisá los datos.'))
+      .catch((err) => setError(errorText(err, 'No se pudo guardar el producto. Revisá los datos.')))
       .finally(() => setSaving(false))
   }
 
@@ -89,7 +90,7 @@ function AdminProducts() {
         setProducts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)))
         showNotice(`El stock de ${updated.description} quedó en ${updated.stock}.`)
       })
-      .catch(() => setError('No se pudo actualizar el stock.'))
+      .catch((err) => setError(errorText(err, 'No se pudo actualizar el stock.')))
 
   // DELETE devuelve 204 (sin cuerpo): se filtra el producto del array.
   const handleDelete = (product) => {
@@ -104,9 +105,12 @@ function AdminProducts() {
         setProducts((prev) => prev.filter((p) => p.id !== product.id))
         showNotice(`Borraste ${product.description}.`)
       })
-      .catch(() =>
+      .catch((err) =>
         setError(
-          `No se puede borrar ${product.description}: ya está en compras o carritos. Podés dejarlo sin stock.`,
+          errorText(
+            err,
+            `No se puede borrar ${product.description}: ya está en compras o carritos. Podés dejarlo sin stock.`,
+          ),
         ),
       )
   }
@@ -171,11 +175,7 @@ function AdminProducts() {
               {products.map((product) => (
                 <tr key={product.id}>
                   <td>
-                    {product.imageUrls?.[0] ? (
-                      <img className="thumb" src={product.imageUrls[0]} alt="" />
-                    ) : (
-                      <div className="thumb" />
-                    )}
+                    <ProductPhoto product={product} className="thumb" />
                   </td>
                   <td>
                     {product.description}

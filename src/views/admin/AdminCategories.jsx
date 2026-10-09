@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { URL, handleResponse, headers } from '../../api/config'
+import { URL, errorText, handleResponse, headers } from '../../api/config'
 import { useAuth } from '../../context/AuthContext'
 
 function AdminCategories() {
@@ -63,7 +63,7 @@ function AdminCategories() {
         setError(
           err.status === 400
             ? `Ya existe una categoría llamada ${description}.`
-            : 'No se pudo crear la categoría.',
+            : errorText(err, 'No se pudo crear la categoría.'),
         ),
       )
       .finally(() => setSaving(false))
@@ -92,7 +92,13 @@ function AdminCategories() {
         setEditingId(null)
         showNotice(`La categoría ahora se llama ${updated.description}.`)
       })
-      .catch(() => setError('No se pudo renombrar la categoría.'))
+      .catch((err) =>
+        setError(
+          err.status === 400
+            ? `Ya existe una categoría llamada ${description}.`
+            : errorText(err, 'No se pudo renombrar la categoría.'),
+        ),
+      )
       .finally(() => setSaving(false))
   }
 
@@ -109,9 +115,12 @@ function AdminCategories() {
         setCategories((prev) => prev.filter((c) => c.id !== category.id))
         showNotice(`Borraste la categoría ${category.description}.`)
       })
-      .catch(() =>
+      .catch((err) =>
         setError(
-          `No se puede borrar ${category.description} porque tiene productos. Cambiales la categoría primero.`,
+          errorText(
+            err,
+            `No se puede borrar ${category.description} porque tiene productos. Cambiales la categoría primero.`,
+          ),
         ),
       )
   }

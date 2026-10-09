@@ -44,8 +44,8 @@ function Orders() {
       <section className="empty-state">
         <h1>Todavía no compraste nada</h1>
         <p>Cuando confirmes una compra desde el carrito, la vas a ver acá.</p>
-        <Link to="/" className="btn">
-          Ir a la tienda
+        <Link to="/catalogo" className="btn">
+          Ir al catálogo
         </Link>
       </section>
     )

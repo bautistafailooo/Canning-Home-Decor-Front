@@ -33,6 +33,44 @@ a otros usuarios en administradores.
 | `const URL = ...` | `src/api/config.js` |
 | carpetas `views/` y `components/` | igual |
 
+## Las fotos de los productos
+
+La base no guarda archivos: guarda direcciones. La tabla `product_images`
+tiene una fila por foto y la API las devuelve en `imageUrls`.
+
+Desde el panel las fotos se **suben**: `components/PhotoUploader.jsx` manda
+el archivo a `POST /uploads` como `multipart/form-data`, el back lo guarda
+con un nombre generado y devuelve la direccion publica. Esa direccion es la
+que se guarda en el producto. La primera del array es la portada.
+
+En multipart **no** hay que poner `Content-Type` a mano. El navegador lo
+arma solo con el `boundary` que separa las partes del cuerpo; si lo
+escribimos nosotros, ese boundary falta y el back no puede leer el archivo.
+Por eso `PhotoUploader` no usa `headers()` de `api/config`, que siempre
+pone `application/json`: manda solo el `Authorization`.
+
+Si una direccion queda rota, `ProductPhoto` muestra el mismo recuadro que
+cuando no hay foto, en lugar del icono de imagen rota del navegador.
+
+## Los filtros viven en la URL
+
+El catalogo no guarda los filtros en un `useState`: los lee de la URL con
+`useSearchParams`. Asi un catalogo filtrado se puede compartir o guardar en
+favoritos, y el boton Atras deshace el ultimo filtro.
+
+`ProductList` recibe la consulta ya armada como **texto**, no como objeto.
+Su `useEffect` depende de ese valor, y un objeto nuevo en cada render del
+padre nunca es igual al anterior: el efecto correria siempre, en un bucle
+infinito. Dos textos iguales si son iguales.
+
+## Mensajes de error
+
+`handleResponse` lee el cuerpo de la respuesta cuando algo sale mal y deja
+el motivo en `error.serverMessage`. `errorText(error, fallback)` lo muestra
+**solo si el error es 4xx**, o sea cuando el back lo decidio a proposito.
+Un 5xx es una falla interna y su mensaje puede traer detalles de la base o
+de la consulta SQL: en ese caso se muestra el texto propio de la vista.
+
 ## Estructura
 
 ```

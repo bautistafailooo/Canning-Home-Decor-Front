@@ -32,8 +32,9 @@ function Navigation() {
 
       <nav className="navbar-links">
         <NavLink to="/" end>
-          Tienda
+          Inicio
         </NavLink>
+        <NavLink to="/catalogo">Catálogo</NavLink>
 
         {isBuyer && (
           <>

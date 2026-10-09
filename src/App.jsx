@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 import Navigation from './components/Navigation'
 import ProtectedRoute from './components/ProtectedRoute'
 import Home from './views/Home'
+import Catalog from './views/Catalog'
 import ProductDetail from './views/ProductDetail'
 import Login from './views/Login'
 import Register from './views/Register'
@@ -22,6 +23,7 @@ function App() {
         <Routes>
           {/* Publicas: cualquiera puede ver el catalogo */}
           <Route path="/" element={<Home />} />
+          <Route path="/catalogo" element={<Catalog />} />
           <Route path="/productos/:id" element={<ProductDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registro" element={<Register />} />

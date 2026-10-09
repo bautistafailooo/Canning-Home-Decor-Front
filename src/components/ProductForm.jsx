@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import PhotoUploader from './PhotoUploader'
 
 // Pasa un producto del back al formato del formulario (todo como texto).
 const toForm = (product) => ({
@@ -7,7 +8,8 @@ const toForm = (product) => ({
   stock: product?.stock ?? '',
   discount: product?.discount ?? 0,
   categoryId: product?.category?.id ?? '',
-  imageUrls: product?.imageUrls?.join('\n') ?? '',
+  // Array de direcciones: la primera es la portada.
+  imageUrls: product?.imageUrls ?? [],
 })
 
 // Formulario de alta y edicion de productos.
@@ -30,11 +32,7 @@ const ProductForm = ({ product, categories, saving, onSubmit, onCancel }) => {
       stock: Number(form.stock),
       discount: Number(form.discount) || 0,
       categoryId: form.categoryId === '' ? null : Number(form.categoryId),
-      // Una URL por renglon; se descartan los renglones vacios.
-      imageUrls: form.imageUrls
-        .split('\n')
-        .map((url) => url.trim())
-        .filter(Boolean),
+      imageUrls: form.imageUrls,
     })
   }
 
@@ -105,15 +103,12 @@ const ProductForm = ({ product, categories, saving, onSubmit, onCancel }) => {
       </div>
 
       <div className="field">
-        <label htmlFor="imageUrls">Fotos</label>
-        <textarea
-          id="imageUrls"
-          name="imageUrls"
-          placeholder="https://…/foto-1.jpg"
-          value={form.imageUrls}
-          onChange={handleChange}
+        <label htmlFor="photos">Fotos</label>
+        <PhotoUploader
+          urls={form.imageUrls}
+          onChange={(imageUrls) => setForm({ ...form, imageUrls })}
+          disabled={saving}
         />
-        <small>Pegá una URL por renglón. La primera es la foto principal.</small>
       </div>
 
       <div className="form-actions">

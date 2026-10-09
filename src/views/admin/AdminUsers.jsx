@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { URL, handleResponse, headers } from '../../api/config'
+import { URL, errorText, handleResponse, headers } from '../../api/config'
 import { useAuth } from '../../context/AuthContext'
 
 function AdminUsers() {
@@ -62,7 +62,7 @@ function AdminUsers() {
           `${updated.name} ${updated.surname} ahora es ${updated.role === 'ADMIN' ? 'administrador' : 'comprador'}.`,
         )
       })
-      .catch(() => setError('No se pudo cambiar el rol.'))
+      .catch((err) => setError(errorText(err, 'No se pudo cambiar el rol.')))
       .finally(() => setBusyId(null))
   }
 
@@ -80,8 +80,10 @@ function AdminUsers() {
         setUsers((prev) => prev.filter((u) => u.id !== target.id))
         showNotice(`Borraste la cuenta de ${target.name} ${target.surname}.`)
       })
-      .catch(() =>
-        setError(`No se puede borrar a ${target.name}: tiene compras o productos asociados.`),
+      .catch((err) =>
+        setError(
+          errorText(err, `No se puede borrar a ${target.name}: tiene compras o productos asociados.`),
+        ),
       )
       .finally(() => setBusyId(null))
   }

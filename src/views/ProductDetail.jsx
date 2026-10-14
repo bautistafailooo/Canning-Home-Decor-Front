@@ -124,13 +124,10 @@ function ProductDetail() {
           <Price product={product} big />
           {product.discount > 0 && <p className="muted">Tiene {product.discount}% de descuento.</p>}
 
-          {product.available ? (
-            <p className="stock-note">
-              {product.stock === 1 ? 'Queda 1 unidad.' : `Hay ${product.stock} unidades.`}
-            </p>
-          ) : (
-            <p className="stock-note out">Sin stock por ahora.</p>
-          )}
+          {/* El inventario no se muestra. Lo unico que ve quien compra
+              es si puede comprar o no: sin ese aviso, el boton
+              deshabilitado no tendria explicacion. */}
+          {!product.available && <p className="stock-note out">Sin stock por ahora.</p>}
 
           {notice && (
             <div className={notice.ok ? 'alert alert-ok' : 'alert'}>

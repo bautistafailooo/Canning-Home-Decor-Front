@@ -49,7 +49,7 @@ function Home() {
         <div className="hero-text">
           <h1>Muebles y objetos para la casa</h1>
           <p>
-            Trabajamos con series cortas: publicamos lo que tenemos y dejamos el stock a la vista.
+            Trabajamos con series cortas: cada pieza se elige, se fotografía y se publica de a una.
           </p>
           <Link to="/catalogo" className="btn">
             Ver el catálogo

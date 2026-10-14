@@ -23,12 +23,7 @@ function Navigation() {
 
   return (
     <header className="navbar">
-      <Link to="/" className="brand">
-        <img src="/favicon.svg" alt="" width="30" height="30" />
-        <span>
-          Canning <em>Home Decor</em>
-        </span>
-      </Link>
+
 
       <nav className="navbar-links">
         <NavLink to="/" end>
@@ -64,6 +59,11 @@ function Navigation() {
           </>
         )}
       </nav>
+            <Link to="/" className="brand">
+              <span className="brand-name">Canning</span>
+        <span className="brand-sub">Home Decor</span>
+        <img src="/favicon.svg" alt="" width="30" height="30" />
+      </Link>
     </header>
   )
 }

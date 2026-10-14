@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { URL, handleResponse } from '../api/config'
 import ProductCard from '../components/ProductCard'
+import ProductPhoto from '../components/ProductPhoto'
 
 const CUANTOS_DESTACADOS = 4
 
@@ -37,16 +38,32 @@ function Home() {
     }
   }, [])
 
+  // Valores derivados en el render: la foto de portada sale de los
+  // productos que ya se pidieron, sin otro GET ni otro estado.
+  const heroProduct = featured.find((product) => product.imageUrls?.length > 0)
+  const showPhoto = loading || Boolean(heroProduct)
+
   return (
     <>
-      <header className="hero">
-        <h1>Muebles y objetos para la casa</h1>
-        <p>
-          Trabajamos con series cortas: publicamos lo que tenemos y dejamos el stock a la vista.
-        </p>
-        <Link to="/catalogo" className="btn">
-          Ver el catálogo
-        </Link>
+      <header className={showPhoto ? 'hero hero-photo' : 'hero'}>
+        <div className="hero-text">
+          <h1>Muebles y objetos para la casa</h1>
+          <p>
+            Trabajamos con series cortas: publicamos lo que tenemos y dejamos el stock a la vista.
+          </p>
+          <Link to="/catalogo" className="btn">
+            Ver el catálogo
+          </Link>
+        </div>
+        {showPhoto && (
+          <div className="hero-figure">
+            {heroProduct && (
+              <Link to={`/productos/${heroProduct.id}`} aria-label={`Ver ${heroProduct.description}`}>
+                <ProductPhoto product={heroProduct} />
+              </Link>
+            )}
+          </div>
+        )}
       </header>
 
       {categories.length > 0 && (

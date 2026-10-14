@@ -10,6 +10,10 @@ function ProductCard({ product, onAdd, adding }) {
       <Link to={`/productos/${product.id}`}>
         <div className="product-photo">
           <ProductPhoto product={product} />
+                    {/* Si hay una segunda foto, aparece al pasar el mouse (solo CSS). */}
+          {product.imageUrls?.[1] && (
+            <ProductPhoto product={product} src={product.imageUrls[1]} className="photo-hover" />
+          )}
           {!product.available && <span className="tag tag-out">Sin stock</span>}
           {product.available && product.discount > 0 && (
             <span className="tag">-{product.discount}%</span>

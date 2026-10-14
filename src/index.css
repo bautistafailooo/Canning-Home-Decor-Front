@@ -120,18 +120,136 @@ img {
   padding: 56px var(--gutter) 120px;
 }
 
+/* ---------- Pie de página ---------- */
+/* Banda oscura: el único contraste fuerte de la página, para cerrarla.
+   Marca a la izquierda, links en columnas a la derecha y una línea
+   final con los datos del trabajo. */
 .footer {
-  background: var(--lino);
-  padding: 48px var(--gutter);
-  text-align: center;
+  --footer-suave: #b3a797; /* texto secundario sobre la tinta */
+  --footer-linea: 1px solid #4a433c;
+  background: var(--tinta);
+  color: var(--hueso);
+  padding: clamp(56px, 7vw, 96px) var(--gutter) 32px;
 }
 
-.footer p {
-  margin: 0;
-  color: var(--piedra);
-  font-size: 0.72rem;
+.footer-inner,
+.footer-legal {
+  max-width: var(--ancho);
+  margin: 0 auto;
+}
+
+.footer-inner {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.footer-brand .brand {
+  align-items: flex-start;
+  color: var(--hueso);
+}
+
+.footer-brand p {
+  margin: 22px 0 0;
+  color: var(--footer-suave);
+  font-family: var(--serif);
+  font-size: 1.15rem;
+}
+
+.footer-nav {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+}
+
+.footer-title {
+  margin: 0 0 18px;
+  color: var(--footer-suave);
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 500;
   letter-spacing: var(--tracking);
   text-transform: uppercase;
+}
+
+.footer-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+/* Mismo subrayado que se dibuja en los links del menú. */
+.footer-nav a,
+.footer-top {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0 1px;
+  transition: background-size 0.5s var(--ease);
+}
+
+.footer-nav a {
+  color: var(--hueso);
+  text-decoration: none;
+  padding-bottom: 2px;
+}
+
+.footer-nav a:hover,
+.footer-top:hover {
+  background-size: 100% 1px;
+}
+
+.footer-legal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  margin-top: clamp(56px, 7vw, 88px);
+  padding-top: 24px;
+  border-top: var(--footer-linea);
+}
+
+.footer-legal p,
+.footer-top {
+  margin: 0;
+  color: var(--footer-suave);
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  letter-spacing: var(--tracking);
+  text-transform: uppercase;
+}
+
+.footer-top {
+  padding: 4px 0;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.footer-top:hover {
+  color: var(--hueso);
+}
+
+
+.footer :focus-visible {
+  outline-color: var(--hueso);
+}
+
+@media (max-width: 700px) {
+  .footer-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-legal {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
 }
 
 /* ---------- Encabezado ---------- */
@@ -1693,5 +1811,127 @@ th.num {
   *::after {
     transition: none !important;
     animation: none !important;
+  }
+}
+/* ---------- Enredaderas ---------- */
+/* Salen de los dos costados de la pantalla y crecen hacia el centro, en
+   Inicio, Catálogo, Ingresar y Crear cuenta. Quedan fijas mientras se
+   hace scroll y van por detrás del contenido, así nunca tapan nada. */
+.vine {
+  position: fixed;
+  z-index: -1;
+  width: clamp(150px, 19vw, 330px);
+  height: auto;
+  color: var(--tierra);
+  pointer-events: none;
+}
+
+/* La de la izquierda arriba y la de la derecha más abajo, en espejo. */
+.vine-left {
+  left: 0;
+  top: 30vh;
+}
+
+.vine-right {
+  right: 0;
+  top: 58vh;
+  scale: -1 1;
+}
+
+.vine-stem,
+.vine-tendril {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+}
+
+.vine-leaf {
+  fill: currentColor;
+  fill-opacity: 0.7;
+  /* Cada hoja gira desde donde nace, no desde su centro. */
+  transform-box: fill-box;
+  transform-origin: 0 50%;
+}
+
+.vine-leaf-open {
+  fill: var(--lino);
+  fill-opacity: 1;
+  stroke: currentColor;
+  stroke-width: 1;
+}
+
+/* La rama entera se mece desde el borde de la pantalla. */
+.vine-sway {
+  transform-box: view-box;
+  transform-origin: 0 25%;
+}
+
+/* En el celular no hay lugar a los costados: no se muestran. */
+@media (max-width: 700px) {
+  .vine {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Al entrar: la rama crece desde el borde hacia adentro y después
+     aparecen las hojas. */
+  .vine-stem,
+  .vine-tendril {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: vine-trazar 2.4s var(--ease) 0.2s forwards;
+  }
+
+  .vine-leaf {
+    animation: vine-hoja 1.2s var(--ease) 1s both;
+  }
+
+  /* Al hacer scroll (en los navegadores que lo soportan): la rama se
+     mece y las hojas se mueven, como con viento. */
+  @supports (animation-timeline: scroll()) {
+    .vine-sway {
+      animation: vine-mece-rama linear both;
+      animation-timeline: scroll(root);
+    }
+
+    .vine-leaf {
+      animation:
+        vine-hoja 1.2s var(--ease) 1s both,
+        vine-mece-hoja linear both;
+      animation-timeline: auto, scroll(root);
+    }
+  }
+}
+
+@keyframes vine-trazar {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes vine-hoja {
+  from {
+    opacity: 0;
+    scale: 0.4;
+  }
+}
+
+@keyframes vine-mece-rama {
+  from {
+    rotate: -4deg;
+  }
+  to {
+    rotate: 6deg;
+  }
+}
+
+@keyframes vine-mece-hoja {
+  from {
+    rotate: -12deg;
+  }
+  to {
+    rotate: 14deg;
   }
 }

@@ -1,5 +1,6 @@
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import Navigation from './components/Navigation'
+import Vines from './components/Vines'
 import ProtectedRoute from './components/ProtectedRoute'
 import Home from './views/Home'
 import Catalog from './views/Catalog'
@@ -13,10 +14,20 @@ import AdminProducts from './views/admin/AdminProducts'
 import AdminCategories from './views/admin/AdminCategories'
 import AdminUsers from './views/admin/AdminUsers'
 import NotFound from './views/NotFound'
+import Footer from './components/Footer'
+
+// Pantallas que llevan las enredaderas a los costados.
+const CON_ENREDADERAS = ['/', '/catalogo', '/login', '/registro']
 
 function App() {
+  const { pathname } = useLocation()
+
+  // Valor derivado de la URL en cada render: no es estado ni efecto.
+  const showVines = CON_ENREDADERAS.includes(pathname)
+
   return (
     <>
+      {showVines && <Vines />}
       <Navigation />
 
       <main className="page">
@@ -64,9 +75,7 @@ function App() {
         </Routes>
       </main>
 
-      <footer className="footer">
-        <p>Canning Home Decor. Trabajo práctico, UADE.</p>
-      </footer>
+        <Footer />
     </>
   )
 }

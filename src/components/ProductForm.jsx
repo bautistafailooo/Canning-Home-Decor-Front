@@ -3,7 +3,10 @@ import PhotoUploader from './PhotoUploader'
 
 // Pasa un producto del back al formato del formulario (todo como texto).
 const toForm = (product) => ({
+  // description es el NOMBRE del producto; details es la descripcion.
+  // Los nombres vienen asi del back.
   description: product?.description ?? '',
+  details: product?.details ?? '',
   price: product?.price ?? '',
   stock: product?.stock ?? '',
   discount: product?.discount ?? 0,
@@ -28,6 +31,9 @@ const ProductForm = ({ product, categories, saving, onSubmit, onCancel }) => {
     e.preventDefault()
     onSubmit({
       description: form.description.trim(),
+      // Si queda vacio se manda null, no una cadena vacia: asi en la
+      // base queda NULL y el detalle sabe que no hay nada que mostrar.
+      details: form.details.trim() || null,
       price: Number(form.price),
       stock: Number(form.stock),
       discount: Number(form.discount) || 0,
@@ -49,6 +55,19 @@ const ProductForm = ({ product, categories, saving, onSubmit, onCancel }) => {
           value={form.description}
           onChange={handleChange}
         />
+      </div>
+
+      <div className="field">
+        <label htmlFor="details">Descripción</label>
+        <textarea
+          id="details"
+          name="details"
+          rows={4}
+          placeholder="Materiales, medidas, de qué está hecho, para qué ambiente va."
+          value={form.details}
+          onChange={handleChange}
+        />
+        <small>Opcional. Se lee en la página del producto.</small>
       </div>
 
       <div className="field-row">

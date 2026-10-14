@@ -2010,3 +2010,13 @@ th.num {
 .row-inactive .thumb {
   filter: grayscale(1);
 }
+
+/* Descripcion larga del producto en el detalle. */
+.detail-text {
+  max-width: 58ch;
+  margin: 4px 0 0;
+  color: var(--piedra);
+  /* Respeta los saltos de renglon que escribio el admin, sin permitir
+     etiquetas HTML: React escapa el texto igual. */
+  white-space: pre-line;
+}

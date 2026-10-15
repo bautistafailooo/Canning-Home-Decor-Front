@@ -59,10 +59,8 @@ function Navigation() {
           </>
         )}
       </nav>
-            <Link to="/" className="brand">
-              <span className="brand-name">Canning</span>
-        <span className="brand-sub">Home Decor</span>
-        <img src="/favicon.svg" alt="" width="30" height="30" />
+                  <Link to="/" className="brand">
+        <img src="/logo.svg" alt="Canning Home Decor" className="brand-logo" />
       </Link>
     </header>
   )

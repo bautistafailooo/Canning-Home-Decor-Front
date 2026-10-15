@@ -26,9 +26,8 @@ function Footer() {
     <footer className="footer">
       <div className="footer-inner" onClick={handleLinkClick}>
         <div className="footer-brand">
-          <Link to="/" className="brand">
-            <span className="brand-name">Canning</span>
-            <span className="brand-sub">Home Decor</span>
+                    <Link to="/" className="brand">
+            <img src="/logo-claro.svg" alt="Canning Home Decor" className="brand-logo" />
           </Link>
           <p>Muebles y objetos para la casa.</p>
         </div>

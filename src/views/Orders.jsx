@@ -55,8 +55,8 @@ function Orders() {
     <>
       <h1>Mis compras</h1>
       <div className="orders">
-        {orders.map((order) => (
-          <OrderCard key={order.id} order={order} />
+        {orders.map((order, index) => (
+          <OrderCard key={order.id} order={order} defaultOpen={index === 0} />
         ))}
       </div>
     </>

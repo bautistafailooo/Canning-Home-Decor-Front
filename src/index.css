@@ -1412,25 +1412,91 @@ textarea:focus {
   border-bottom: var(--linea);
 }
 
+/* El encabezado es un boton que ocupa todo el ancho, pero no tiene que
+   parecerlo: se le saca el aspecto de boton y queda solo el cursor. */
 .order-header {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: 16px;
-  margin-bottom: 16px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
-.order-header h2 {
-  margin: 0;
+.order-id {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.order-number {
+  font-family: var(--serif);
   font-size: 1.5rem;
 }
 
-.order-header p {
-  margin: 4px 0 0;
+.order-date {
   font-size: 0.68rem;
   font-weight: 500;
   letter-spacing: var(--tracking);
   text-transform: uppercase;
+  color: var(--piedra);
+}
+
+.order-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* La flecha: dos lados de un cuadrado, girado. */
+.order-chevron {
+  width: 9px;
+  height: 9px;
+  flex: none;
+  border-right: 1px solid var(--piedra);
+  border-bottom: 1px solid var(--piedra);
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 0.3s var(--ease);
+}
+
+.order-open .order-chevron {
+  transform: rotate(225deg) translateY(-2px);
+}
+
+/* Desplegar hasta la altura real del contenido.
+   Una grilla de una sola fila puede ir de 0fr a 1fr y eso SI se puede
+   animar; height: auto no. El hijo lleva overflow: hidden para que el
+   contenido se recorte mientras se abre. */
+.order-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s var(--ease);
+}
+
+.order-open .order-body {
+  grid-template-rows: 1fr;
+}
+
+.order-body-inner {
+  overflow: hidden;
+}
+
+.order-items {
+  padding-top: 16px;
+}
+
+/* Quien pidio menos movimiento abre y cierra igual, pero sin transicion. */
+@media (prefers-reduced-motion: reduce) {
+  .order-body,
+  .order-chevron {
+    transition: none;
+  }
 }
 
 .order-total {
@@ -1943,4 +2009,24 @@ th.num {
 
 .footer-brand .brand-logo {
   height: 60px;
+}
+
+/* Fila de un producto dado de baja: sigue siendo legible, pero se nota
+   que no esta publicado. */
+.row-inactive td {
+  opacity: 0.55;
+}
+
+.row-inactive .thumb {
+  filter: grayscale(1);
+}
+
+/* Descripcion larga del producto en el detalle. */
+.detail-text {
+  max-width: 58ch;
+  margin: 4px 0 0;
+  color: var(--piedra);
+  /* Respeta los saltos de renglon que escribio el admin, sin permitir
+     etiquetas HTML: React escapa el texto igual. */
+  white-space: pre-line;
 }

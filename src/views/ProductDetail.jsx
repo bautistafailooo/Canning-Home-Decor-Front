@@ -124,13 +124,17 @@ function ProductDetail() {
           <Price product={product} big />
           {product.discount > 0 && <p className="muted">Tiene {product.discount}% de descuento.</p>}
 
-          {product.available ? (
-            <p className="stock-note">
-              {product.stock === 1 ? 'Queda 1 unidad.' : `Hay ${product.stock} unidades.`}
-            </p>
-          ) : (
-            <p className="stock-note out">Sin stock por ahora.</p>
-          )}
+          {/* details es la descripcion larga; description, mas arriba, es
+              el nombre. Es opcional: si el producto no la tiene, no se
+              dibuja nada en lugar de un hueco vacio.
+              white-space: pre-line en el CSS respeta los renglones que
+              haya escrito el admin en el textarea. */}
+          {product.details && <p className="detail-text">{product.details}</p>}
+
+          {/* El inventario no se muestra. Lo unico que ve quien compra
+              es si puede comprar o no: sin ese aviso, el boton
+              deshabilitado no tendria explicacion. */}
+          {!product.available && <p className="stock-note out">Sin stock por ahora.</p>}
 
           {notice && (
             <div className={notice.ok ? 'alert alert-ok' : 'alert'}>

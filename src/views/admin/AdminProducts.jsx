@@ -19,11 +19,19 @@ function AdminProducts() {
 
   // MONTAJE: productos y categorias se piden UNA vez, en paralelo.
   // Despues, toda alta, edicion o baja actualiza estos arrays a mano.
+  //
+  // El token es dependencia porque se usa adentro del efecto. Mientras
+  // la sesion sigue abierta no cambia, asi que en la practica esto
+  // corre una sola vez; pero dejarlo afuera del array seria el error
+  // que ESLint marca con react-hooks/exhaustive-deps.
   useEffect(() => {
     let active = true
 
     Promise.all([
-      fetch(`${URL}/products`).then(handleResponse),
+      // includeInactive: el panel es el unico lugar donde se ven los
+      // productos dados de baja. El back solo lo acepta si quien
+      // pregunta es administrador.
+      fetch(`${URL}/products?includeInactive=true`, { headers: headers(token) }).then(handleResponse),
       fetch(`${URL}/categories`).then(handleResponse),
     ])
       .then(([productPage, categoryPage]) => {
@@ -42,7 +50,7 @@ function AdminProducts() {
     return () => {
       active = false
     }
-  }, [])
+  }, [token])
 
   const showNotice = (text) => {
     setError('')
@@ -92,9 +100,12 @@ function AdminProducts() {
       })
       .catch((err) => setError(errorText(err, 'No se pudo actualizar el stock.')))
 
-  // DELETE devuelve 204 (sin cuerpo): se filtra el producto del array.
+  // DELETE devuelve 204 (sin cuerpo). Como ahora es una baja logica, el
+  // producto no se saca del array: se marca inactivo con lo que ya
+  // sabemos, sin volver a pedir la lista.
   const handleDelete = (product) => {
-    if (!window.confirm(`¿Borrar ${product.description}? No se puede deshacer.`)) return
+    if (!window.confirm(`¿Dar de baja ${product.description}? Sale del catálogo, pero lo podés volver a publicar.`))
+      return
 
     fetch(`${URL}/products/${product.id}`, {
       method: 'DELETE',
@@ -102,23 +113,38 @@ function AdminProducts() {
     })
       .then(handleResponse)
       .then(() => {
-        setProducts((prev) => prev.filter((p) => p.id !== product.id))
-        showNotice(`Borraste ${product.description}.`)
+        setProducts((prev) =>
+          prev.map((p) => (p.id === product.id ? { ...p, active: false } : p)),
+        )
+        showNotice(`${product.description} salió del catálogo.`)
       })
       .catch((err) =>
-        setError(
-          errorText(
-            err,
-            `No se puede borrar ${product.description}: ya está en compras o carritos. Podés dejarlo sin stock.`,
-          ),
-        ),
+        setError(errorText(err, `No se pudo dar de baja ${product.description}.`)),
       )
+  }
+
+  // PATCH: vuelve a publicar. El back devuelve el producto actualizado
+  // y se reemplaza en el array.
+  const handleReactivate = (product) => {
+    fetch(`${URL}/products/${product.id}/active?active=true`, {
+      method: 'PATCH',
+      headers: headers(token),
+    })
+      .then(handleResponse)
+      .then((updated) => {
+        setProducts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)))
+        showNotice(`${updated.description} volvió al catálogo.`)
+      })
+      .catch((err) => setError(errorText(err, 'No se pudo volver a publicar el producto.')))
   }
 
   const startEdit = (product) => {
     setEditing(product)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
+
+  // Valor derivado: no necesita estado propio.
+  const activos = products.filter((product) => product.active)
 
   if (loading) return <p className="loading">Cargando productos…</p>
 
@@ -141,7 +167,8 @@ function AdminProducts() {
       ) : (
         <div className="admin-header">
           <p className="muted">
-            {products.length} {products.length === 1 ? 'producto publicado' : 'productos publicados'}
+            {activos.length} {activos.length === 1 ? 'producto publicado' : 'productos publicados'}
+            {products.length > activos.length && `, ${products.length - activos.length} fuera del catálogo`}
           </p>
           <button type="button" className="btn" onClick={() => setEditing('new')}>
             Nuevo producto
@@ -173,13 +200,14 @@ function AdminProducts() {
             </thead>
             <tbody>
               {products.map((product) => (
-                <tr key={product.id}>
+                <tr key={product.id} className={product.active ? undefined : 'row-inactive'}>
                   <td>
                     <ProductPhoto product={product} className="thumb" />
                   </td>
                   <td>
                     {product.description}
-                    {product.discount > 0 && (
+                    {!product.active && <div className="product-meta">Fuera del catálogo</div>}
+                    {product.active && product.discount > 0 && (
                       <div className="product-meta">{product.discount}% de descuento</div>
                     )}
                   </td>
@@ -202,13 +230,23 @@ function AdminProducts() {
                       >
                         Editar
                       </button>
-                      <button
-                        type="button"
-                        className="btn btn-danger btn-small"
-                        onClick={() => handleDelete(product)}
-                      >
-                        Borrar
-                      </button>
+                      {product.active ? (
+                        <button
+                          type="button"
+                          className="btn btn-danger btn-small"
+                          onClick={() => handleDelete(product)}
+                        >
+                          Dar de baja
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className="btn btn-small"
+                          onClick={() => handleReactivate(product)}
+                        >
+                          Volver a publicar
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>

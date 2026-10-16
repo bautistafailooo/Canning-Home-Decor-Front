@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { URL } from '../api/config'
 import { useAuth } from '../context/AuthContext'
 
@@ -14,7 +14,9 @@ const MAX_BYTES = 10 * 1024 * 1024
 // la primera es la portada.
 const PhotoUploader = ({ urls, onChange, disabled }) => {
   const { token } = useAuth()
-  const inputRef = useRef(null)
+    // Cambiar este numero hace que React arme el input de archivos de cero,
+  // vacio. Asi se puede volver a elegir la misma foto sin tocar el DOM.
+  const [inputKey, setInputKey] = useState(0)
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState('')
 
@@ -48,7 +50,7 @@ const PhotoUploader = ({ urls, onChange, disabled }) => {
     const tooBig = files.find((file) => file.size > MAX_BYTES)
     if (tooBig) {
       setError(`${tooBig.name} pesa más de 10 MB. Achicala antes de subirla.`)
-      event.target.value = ''
+        setInputKey((k) => k + 1)
       return
     }
 
@@ -63,7 +65,7 @@ const PhotoUploader = ({ urls, onChange, disabled }) => {
       .finally(() => {
         setUploading(false)
         // Se limpia el input para poder volver a elegir el mismo archivo.
-        event.target.value = ''
+        setInputKey((k) => k + 1)
       })
   }
 
@@ -75,8 +77,11 @@ const PhotoUploader = ({ urls, onChange, disabled }) => {
   return (
     <div className="uploader">
       <div className="uploader-actions">
+                {/* El input de archivos del navegador queda oculto y lo abre el
+            label: tocar un <label htmlFor="photos"> es como tocar el input.
+            Es HTML comun, sin agarrar el elemento desde JavaScript. */}
         <input
-          ref={inputRef}
+          key={inputKey}
           id="photos"
           type="file"
           accept="image/jpeg,image/png,image/webp,image/gif"
@@ -85,14 +90,13 @@ const PhotoUploader = ({ urls, onChange, disabled }) => {
           onChange={handleFiles}
           disabled={disabled || uploading}
         />
-        <button
-          type="button"
+        <label
+          htmlFor="photos"
           className="btn btn-outline btn-small"
-          onClick={() => inputRef.current?.click()}
-          disabled={disabled || uploading}
+          aria-disabled={disabled || uploading}
         >
           {uploading ? 'Subiendo…' : 'Elegir fotos'}
-        </button>
+        </label>
         <small>JPG, PNG, WEBP o GIF, hasta 10 MB cada una.</small>
       </div>
 

@@ -2030,3 +2030,16 @@ th.num {
      etiquetas HTML: React escapa el texto igual. */
   white-space: pre-line;
 }
+/* El botón "Elegir fotos" es un label: si está deshabilitado, se ve
+   igual que un botón deshabilitado y no responde. */
+.btn[aria-disabled='true'] {
+  background: var(--arena);
+  border-color: var(--arena);
+  color: var(--piedra);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+label.btn {
+  cursor: pointer;
+}

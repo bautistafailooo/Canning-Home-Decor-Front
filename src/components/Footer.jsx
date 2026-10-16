@@ -18,15 +18,13 @@ function Footer() {
 
   // Al tocar un link del pie se esta abajo de todo. Sin esto, la pagina
   // nueva se abriria a esa misma altura y no desde arriba.
-  const handleLinkClick = (event) => {
-    if (event.target.closest('a')) window.scrollTo(0, 0)
-  }
+  const goToTop = () => window.scrollTo(0, 0)
 
   return (
     <footer className="footer">
-      <div className="footer-inner" onClick={handleLinkClick}>
+      <div className="footer-inner">
         <div className="footer-brand">
-                    <Link to="/" className="brand">
+          <Link to="/" className="brand" onClick={goToTop}>
             <img src="/logo-claro.svg" alt="Canning Home Decor" className="brand-logo" />
           </Link>
           <p>Muebles y objetos para la casa.</p>
@@ -37,10 +35,10 @@ function Footer() {
             <h2 className="footer-title">Tienda</h2>
             <ul>
               <li>
-                <Link to="/">Inicio</Link>
+                <Link to="/" onClick={goToTop}>Inicio</Link>
               </li>
               <li>
-                <Link to="/catalogo">Catálogo</Link>
+                <Link to="/catalogo" onClick={goToTop}>Catálogo</Link>
               </li>
             </ul>
           </div>
@@ -51,13 +49,13 @@ function Footer() {
               {isAdmin && (
                 <>
                   <li>
-                    <Link to="/admin">Productos</Link>
+                    <Link to="/admin" onClick={goToTop}>Productos</Link>
                   </li>
                   <li>
-                    <Link to="/admin/categorias">Categorías</Link>
+                    <Link to="/admin/categorias" onClick={goToTop}>Categorías</Link>
                   </li>
                   <li>
-                    <Link to="/admin/usuarios">Usuarios</Link>
+                    <Link to="/admin/usuarios" onClick={goToTop}>Usuarios</Link>
                   </li>
                 </>
               )}
@@ -65,10 +63,10 @@ function Footer() {
               {isBuyer && (
                 <>
                   <li>
-                    <Link to="/mis-compras">Mis compras</Link>
+                    <Link to="/mis-compras" onClick={goToTop}>Mis compras</Link>
                   </li>
                   <li>
-                    <Link to="/carrito">Carrito</Link>
+                    <Link to="/carrito" onClick={goToTop}>Carrito</Link>
                   </li>
                 </>
               )}
@@ -76,10 +74,10 @@ function Footer() {
               {!isAdmin && !isBuyer && (
                 <>
                   <li>
-                    <Link to="/login">Ingresar</Link>
+                    <Link to="/login" onClick={goToTop}>Ingresar</Link>
                   </li>
                   <li>
-                    <Link to="/registro">Crear cuenta</Link>
+                    <Link to="/registro" onClick={goToTop}>Crear cuenta</Link>
                   </li>
                 </>
               )}

@@ -2043,3 +2043,16 @@ th.num {
 label.btn {
   cursor: pointer;
 }
+
+/* Pregunta de confirmación en el lugar del botón (ConfirmButton). */
+.confirm {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.confirm-question {
+  color: var(--piedra);
+  font-size: 0.85rem;
+}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { URL, errorText, handleResponse, headers } from '../../api/config'
 import { useAuth } from '../../context/AuthContext'
+import ConfirmButton from '../../components/ConfirmButton'
 
 function AdminUsers() {
   const { token, user: me } = useAuth()
@@ -68,7 +69,6 @@ function AdminUsers() {
 
   // DELETE (204): se saca del array.
   const handleDelete = (target) => {
-    if (!window.confirm(`¿Borrar la cuenta de ${target.name} ${target.surname}?`)) return
     setBusyId(target.id)
 
     fetch(`${URL}/users/${target.id}`, {
@@ -136,14 +136,13 @@ function AdminUsers() {
                         >
                           {u.role === 'ADMIN' ? 'Hacer comprador' : 'Hacer administrador'}
                         </button>
-                        <button
-                          type="button"
+                        <ConfirmButton
+                          label="Borrar"
+                          question="¿Borrar la cuenta?"
                           className="btn btn-danger btn-small"
-                          onClick={() => handleDelete(u)}
+                          onConfirm={() => handleDelete(u)}
                           disabled={busyId === u.id}
-                        >
-                          Borrar
-                        </button>
+                        />
                       </div>
                     )}
                   </td>

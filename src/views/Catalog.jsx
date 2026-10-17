@@ -84,7 +84,6 @@ function Catalog() {
     if (page === 0) url.delete('pagina')
     else url.set('pagina', page)
     setSearchParams(url)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   // POST /cart/items. El carrito se actualiza con la respuesta (ver

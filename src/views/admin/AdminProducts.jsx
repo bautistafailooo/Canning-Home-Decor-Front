@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext'
 import ProductForm from '../../components/ProductForm'
 import ProductPhoto from '../../components/ProductPhoto'
 import StockCell from '../../components/StockCell'
+import ConfirmButton from '../../components/ConfirmButton'
 
 function AdminProducts() {
   const { token, user } = useAuth()
@@ -104,8 +105,6 @@ function AdminProducts() {
   // producto no se saca del array: se marca inactivo con lo que ya
   // sabemos, sin volver a pedir la lista.
   const handleDelete = (product) => {
-    if (!window.confirm(`¿Dar de baja ${product.description}? Sale del catálogo, pero lo podés volver a publicar.`))
-      return
 
     fetch(`${URL}/products/${product.id}`, {
       method: 'DELETE',
@@ -138,10 +137,9 @@ function AdminProducts() {
       .catch((err) => setError(errorText(err, 'No se pudo volver a publicar el producto.')))
   }
 
-  const startEdit = (product) => {
-    setEditing(product)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
+  // Mientras se edita, la tabla se esconde (ver abajo): el formulario
+  // queda solo en pantalla y no hace falta mover la pagina.
+  const startEdit = (product) => setEditing(product)
 
   // Valor derivado: no necesita estado propio.
   const activos = products.filter((product) => product.active)
@@ -176,7 +174,7 @@ function AdminProducts() {
         </div>
       )}
 
-      {products.length === 0 ? (
+      {editing ? null : products.length === 0 ? (
         <div className="empty-state">
           <h2>Todavía no hay productos</h2>
           <p>Publicá el primero con el botón Nuevo producto.</p>
@@ -231,13 +229,12 @@ function AdminProducts() {
                         Editar
                       </button>
                       {product.active ? (
-                        <button
-                          type="button"
+                        <ConfirmButton
+                          label="Dar de baja"
+                          question="¿Sacarlo del catálogo?"
                           className="btn btn-danger btn-small"
-                          onClick={() => handleDelete(product)}
-                        >
-                          Dar de baja
-                        </button>
+                          onConfirm={() => handleDelete(product)}
+                        />
                       ) : (
                         <button
                           type="button"

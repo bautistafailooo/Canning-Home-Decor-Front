@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { URL, errorText, handleResponse, headers } from '../../api/config'
 import { useAuth } from '../../context/AuthContext'
+import ConfirmButton from '../../components/ConfirmButton'
 
 function AdminCategories() {
   const { token } = useAuth()
@@ -104,8 +105,6 @@ function AdminCategories() {
 
   // DELETE (204): se saca del array.
   const handleDelete = (category) => {
-    if (!window.confirm(`¿Borrar la categoría ${category.description}?`)) return
-
     fetch(`${URL}/categories/${category.id}`, {
       method: 'DELETE',
       headers: headers(token),
@@ -199,13 +198,12 @@ function AdminCategories() {
                           >
                             Renombrar
                           </button>
-                          <button
-                            type="button"
+                          <ConfirmButton
+                            label="Borrar"
+                            question="¿Borrar la categoría?"
                             className="btn btn-danger btn-small"
-                            onClick={() => handleDelete(category)}
-                          >
-                            Borrar
-                          </button>
+                            onConfirm={() => handleDelete(category)}
+                          />
                         </div>
                       </td>
                     </>

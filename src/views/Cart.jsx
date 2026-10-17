@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { errorText, formatPrice } from '../api/config'
 import { useCart } from '../context/CartContext'
 import CartLine from '../components/CartLine'
+import ConfirmButton from '../components/ConfirmButton'
 
 // Esta vista NO tiene useEffect: el carrito ya lo trajo CartContext una
 // sola vez. Cada accion actualiza el estado con lo que devuelve el back.
@@ -34,7 +35,6 @@ function Cart() {
   const handleRemove = (item) => runOnItem(item.id, () => removeItem(item.id))
 
   const handleClear = () => {
-    if (!window.confirm('¿Vaciar el carrito?')) return
     setWorking(true)
     setError('')
     clearCart()
@@ -124,9 +124,14 @@ function Cart() {
               />
             ))}
           </ul>
-          <button type="button" className="link-button clear-cart" onClick={handleClear} disabled={busy}>
-            Vaciar el carrito
-          </button>
+          <ConfirmButton
+            label="Vaciar el carrito"
+            question="¿Vaciar el carrito?"
+            confirmLabel="Sí, vaciar"
+            className="link-button clear-cart"
+            onConfirm={handleClear}
+            disabled={busy}
+          />
         </div>
 
         <aside className="summary">

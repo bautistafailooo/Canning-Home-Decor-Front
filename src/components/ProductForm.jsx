@@ -48,9 +48,13 @@ const ProductForm = ({ product, categories, saving, onSubmit, onCancel }) => {
 
       <div className="field">
         <label htmlFor="description">Nombre del producto</label>
+        {/* autoFocus: al abrir el formulario el cursor queda en este campo
+            y el navegador lo trae a la vista solo, sin mover la pagina
+            desde el codigo. */}
         <input
           id="description"
           name="description"
+          autoFocus
           required
           value={form.description}
           onChange={handleChange}
